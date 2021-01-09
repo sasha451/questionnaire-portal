@@ -1,6 +1,6 @@
 package by.shulga.softarex.questionnaireportal.entity;
 
-public enum Type {
+public enum FieldType {
 
     SINGLE_LINE_TEXT,
     MULTILINE_TEXT,
