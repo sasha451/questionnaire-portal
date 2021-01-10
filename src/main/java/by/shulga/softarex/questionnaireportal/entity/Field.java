@@ -20,6 +20,7 @@ public class Field {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Column(nullable = false, unique = true)
     private String label;
 
     @Enumerated(EnumType.STRING)

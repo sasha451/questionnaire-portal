@@ -19,7 +19,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Field> fieldList = new ArrayList<>();
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -47,6 +47,17 @@ public class Customer {
     public Customer(List<Response> responseList, String email, String password, String firstName, String lastName,
                     String phoneNumber) {
         this.responseList = responseList;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Customer(List<Response> responseList, List<Field> fieldList, String email, String password,
+                    String firstName, String lastName, String phoneNumber) {
+        this.responseList = responseList;
+        this.fieldList = fieldList;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
