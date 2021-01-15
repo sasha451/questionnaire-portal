@@ -1,0 +1,130 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: create_customer_table
+      author: alex_shulga
+      changes:
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: customer_id
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: phone_number
+                  type: varchar(255)
+  - changeSet:
+      id: create_field_table
+      author: alex_shulga
+      changes:
+        - createTable:
+            tableName: field
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: field_id
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+              - column:
+                  name: label
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: required
+                  type: boolean
+              - column:
+                  name: field_type
+                  type: varchar(255)
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_customer_id
+                    references: customer(id)
+  - changeSet:
+      id: create_response_table
+      author: alex_shulga
+      changes:
+        - createTable:
+            tableName: response
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: response_id
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_customer_id
+                    references: customer(id)
+  - changeSet:
+      id: create_response_entry_table
+      author: alex_shulga
+      changes:
+        - createTable:
+            tableName: response_entry
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: response_entry_value
+                  type: varchar(255)
+              - column:
+                  name: field_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_field_id
+                    references: field(id)
+              - column:
+                  name: response_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_response_id
+                    references: response(id)
