@@ -3,15 +3,9 @@ package by.shulga.softarex.questionnaireportal.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "customer_id")
-    private Long id;
+public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Response> responseList = new ArrayList<>();
@@ -25,10 +19,13 @@ public class Customer {
     @Column(nullable = false)
     private String password;
 
+    @Column
     private String firstName;
 
+    @Column
     private String lastName;
 
+    @Column
     private String phoneNumber;
 
     public Customer() {}
@@ -38,43 +35,12 @@ public class Customer {
         this.password = password;
     }
 
-    public Customer(List<Response> responseList, String email, String password) {
-        this.responseList = responseList;
-        this.email = email;
-        this.password = password;
-    }
-
-    public Customer(List<Response> responseList, String email, String password, String firstName, String lastName,
-                    String phoneNumber) {
-        this.responseList = responseList;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Customer(List<Response> responseList, List<Field> fieldList, String email, String password,
-                    String firstName, String lastName, String phoneNumber) {
-        this.responseList = responseList;
-        this.fieldList = fieldList;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
-
     public List<Field> getFieldList() {
         return fieldList;
     }
 
     public void setFieldList(List<Field> fieldList) {
         this.fieldList = fieldList;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public List<Response> getResponseList() {
@@ -123,20 +89,5 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) &&
-                Objects.equals(email, customer.email) &&
-                Objects.equals(password, customer.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, password);
     }
 }

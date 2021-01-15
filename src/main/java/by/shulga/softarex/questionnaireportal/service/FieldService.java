@@ -14,5 +14,5 @@ public interface FieldService {
 
     Field saveField(Field field);
 
-    Field updateField(Field field);
+    Field updateField(long id, Field field);
 }

@@ -1,6 +1,8 @@
 package by.shulga.softarex.questionnaireportal.web;
 
+import by.shulga.softarex.questionnaireportal.dto.ResponseDto;
 import by.shulga.softarex.questionnaireportal.entity.Response;
+import by.shulga.softarex.questionnaireportal.mapper.ResponseMapper;
 import by.shulga.softarex.questionnaireportal.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/responses")
@@ -15,33 +18,40 @@ public class ResponseController {
 
     private final ResponseService responseService;
 
+    private final ResponseMapper responseMapper;
+
     @Autowired
-    public ResponseController(ResponseService responseService) {
+    public ResponseController(ResponseService responseService, ResponseMapper responseMapper) {
         this.responseService = responseService;
+        this.responseMapper = responseMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Response> saveResponse(@RequestBody Response response) {
+    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) {
+        Response response = responseMapper.toEntity(responseDto);
         Response savedResponse = responseService.saveResponse(response);
-        return new ResponseEntity<>(savedResponse, HttpStatus.OK);
+        return new ResponseEntity<>(responseMapper.toDto(savedResponse), HttpStatus.OK);
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Response> findResponse(@PathVariable("id") long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> findResponse(@PathVariable("id") long id) {
         Response response = responseService.getResponseById(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(responseMapper.toDto(response), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Response>> findAllResponses() {
+    public ResponseEntity<List<ResponseDto>> findAllResponses() {
         List<Response> responses = responseService.getAllResponses();
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+        List<ResponseDto> responseDtoList = responses.stream().map(responseMapper::toDto).collect(Collectors.toList());
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<Response> updateCustomer(@RequestBody Response response) {
-        Response updatedResponse = responseService.updateResponse(response);
-        return new ResponseEntity<>(updatedResponse, HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto> updateCustomer(@PathVariable("id") long id,
+                                                      @RequestBody ResponseDto responseDto) {
+        Response response = responseMapper.toEntity(responseDto);
+        Response updatedResponse = responseService.updateResponse(id, response);
+        return new ResponseEntity<>(responseMapper.toDto(updatedResponse), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

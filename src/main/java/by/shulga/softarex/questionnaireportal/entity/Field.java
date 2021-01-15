@@ -3,31 +3,28 @@ package by.shulga.softarex.questionnaireportal.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-public class Field {
+public class Field extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "field_id")
-    private Long id;
-
-    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<ResponseEntry> responseEntryList = new ArrayList<>();
 
-    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Column(nullable = false, unique = true)
     private String label;
 
+    @Column
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
 
+    @Column
     private boolean required;
 
+    @Column
     private boolean isActive;
 
     public Field() {}
@@ -38,19 +35,6 @@ public class Field {
         this.required = required;
         this.isActive = isActive;
         this.customer = customer;
-    }
-
-    public Field(List<ResponseEntry> responseEntryList, String label, FieldType fieldType, boolean required,
-                 boolean isActive) {
-        this.responseEntryList = responseEntryList;
-        this.label = label;
-        this.fieldType = fieldType;
-        this.required = required;
-        this.isActive = isActive;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Customer getCustomer() {
@@ -99,34 +83,5 @@ public class Field {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Field field = (Field) o;
-        return required == field.required &&
-                isActive == field.isActive &&
-                Objects.equals(id, field.id) &&
-                Objects.equals(label, field.label) &&
-                fieldType == field.fieldType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, label, fieldType, required, isActive);
-    }
-
-    @Override
-    public String toString() {
-        return "Field{" +
-                "id=" + id +
-                ", responseEntryList=" + responseEntryList +
-                ", label='" + label + '\'' +
-                ", fieldType=" + fieldType +
-                ", required=" + required +
-                ", isActive=" + isActive +
-                '}';
     }
 }

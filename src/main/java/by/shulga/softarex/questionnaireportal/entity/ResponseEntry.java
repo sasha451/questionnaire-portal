@@ -1,23 +1,18 @@
 package by.shulga.softarex.questionnaireportal.entity;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
-public class ResponseEntry {
+public class ResponseEntry extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "responseEntry_id")
-    private Long id;
-
+    @Column
     private String responseEntryValue;
 
     @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "field_id")
     private Field field;
 
-    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "response_id")
     private Response response;
 
@@ -37,10 +32,6 @@ public class ResponseEntry {
         this.response = response;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getResponseEntryValue() {
         return responseEntryValue;
     }
@@ -55,26 +46,5 @@ public class ResponseEntry {
 
     public void setField(Field field) {
         this.field = field;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ResponseEntry that = (ResponseEntry) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(responseEntryValue, that.responseEntryValue);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, responseEntryValue);
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseEntry{" +
-                "id=" + id +
-                ", responseEntryValue='" + responseEntryValue + '\'';
     }
 }

@@ -1,6 +1,6 @@
 package by.shulga.softarex.questionnaireportal.exception;
 
-public class NotFoundException extends NullPointerException {
+public class NotFoundException extends RuntimeException {
 
     private String message;
 

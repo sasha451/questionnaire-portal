@@ -14,5 +14,5 @@ public interface ResponseService {
 
     Response saveResponse(Response response);
 
-    Response updateResponse(Response response);
+    Response updateResponse(long id, Response response);
 }

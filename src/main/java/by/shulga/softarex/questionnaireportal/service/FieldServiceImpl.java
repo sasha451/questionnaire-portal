@@ -5,11 +5,13 @@ import by.shulga.softarex.questionnaireportal.exception.NotFoundException;
 import by.shulga.softarex.questionnaireportal.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class FieldServiceImpl implements FieldService {
 
     private final FieldRepository fieldRepository;
@@ -21,18 +23,13 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public Field getFieldById(long id) {
-        Optional<Field> foundFieldOptional = fieldRepository.findById(id);
-        if (foundFieldOptional.isPresent()) {
-            return foundFieldOptional.get();
-        } else {
-            throw new NotFoundException("No field with id" + id);
-        }
+        return fieldRepository.findById(id).orElseThrow(() -> new NotFoundException("No field with id " + id));
     }
 
     @Override
     public void deleteField(long id) {
-        this.getFieldById(id);
-        fieldRepository.deleteById(id);
+        Field field = getFieldById(id);
+        fieldRepository.delete(field);
     }
 
     @Override
@@ -43,24 +40,22 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public Field saveField(Field field) {
         Optional<Field> foundFieldOptional = fieldRepository.findByLabel(field.getLabel());
-        return foundFieldOptional.orElseGet(() -> fieldRepository.save(field));
+        if (foundFieldOptional.isEmpty()) {
+            return fieldRepository.save(field);
+        } else {
+            throw new IllegalArgumentException("Field already exists");
+        }
     }
 
     @Override
-    public Field updateField(Field field) {
-        Optional<Field> foundFieldOptional = fieldRepository.findByLabel(field.getLabel());
-        if (foundFieldOptional.isPresent()) {
-            foundFieldOptional.get().setLabel(field.getLabel());
-            foundFieldOptional.get().setActive(field.isActive());
-            foundFieldOptional.get().setRequired(field.isRequired());
-            foundFieldOptional.get().setFieldType(field.getFieldType());
-            foundFieldOptional.get().setCustomer(field.getCustomer());
-            foundFieldOptional.get().setResponseEntryList(field.getResponseEntryList());
-            fieldRepository.save(foundFieldOptional.get());
-            return fieldRepository.findByLabel(field.getLabel()).orElseThrow(() ->
-                    new NotFoundException("No such field"));
-        } else {
-            throw new NotFoundException("No such field");
-        }
+    public Field updateField(long id, Field field) {
+        Field foundField = getFieldById(id);
+        foundField.setLabel(field.getLabel());
+        foundField.setActive(field.isActive());
+        foundField.setRequired(field.isRequired());
+        foundField.setFieldType(field.getFieldType());
+        foundField.setCustomer(field.getCustomer());
+        foundField.setResponseEntryList(field.getResponseEntryList());
+        return getFieldById(id);
     }
 }
