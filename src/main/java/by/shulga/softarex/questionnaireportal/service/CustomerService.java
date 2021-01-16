@@ -8,6 +8,8 @@ public interface CustomerService {
 
     Customer getCustomerById(long id);
 
+    Customer getCustomerByEmail(String email);
+
     void deleteCustomer(long id);
 
     List<Customer> getAllCustomers();
@@ -15,4 +17,6 @@ public interface CustomerService {
     Customer saveCustomer(Customer customer);
 
     Customer updateCustomer(long id, Customer customer);
+
+    Customer getCustomerByEmailAndPassword(String email, String password);
 }

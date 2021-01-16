@@ -29,6 +29,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer getCustomerByEmailAndPassword(String email, String password) {
+        Customer foundCustomer = getCustomerByEmail(email);
+        if (foundCustomer.getPassword().equals(password)) {
+            return foundCustomer;
+        } else {
+            throw new NotFoundException("No customer with email " + email + " and this password");
+        }
+    }
+
+    @Override
+    public Customer getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("No customer with email "
+                + email));
+    }
+
+    @Override
     public void deleteCustomer(long id) {
         Customer customer = getCustomerById(id);
         customerRepository.delete(customer);
