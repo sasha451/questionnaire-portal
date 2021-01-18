@@ -2,6 +2,9 @@ package by.shulga.softarex.questionnaireportal.dto;
 
 import by.shulga.softarex.questionnaireportal.entity.FieldType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FieldDto {
 
     private long id;
@@ -16,6 +19,8 @@ public class FieldDto {
 
     private long customerId;
 
+    private List<OptionDto> options = new ArrayList<>();
+
     public FieldDto() {
     }
 
@@ -25,6 +30,14 @@ public class FieldDto {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<OptionDto> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<OptionDto> options) {
+        this.options = options;
     }
 
     public long getCustomerId() {

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/fields")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FieldController {
 
     private final FieldService fieldService;
@@ -42,6 +43,13 @@ public class FieldController {
     @GetMapping
     public ResponseEntity<List<FieldDto>> findAllFields() {
         List<Field> fields = fieldService.getAllFields();
+        List<FieldDto> fieldDtoList = fields.stream().map(fieldMapper::toDto).collect(Collectors.toList());
+        return new ResponseEntity<>(fieldDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/byCustomerId", params = "id")
+    public ResponseEntity<List<FieldDto>> findAllFieldsByCustomerId(@RequestParam("id") long id) {
+        List<Field> fields = fieldService.getAllFieldsByCustomerId(id);
         List<FieldDto> fieldDtoList = fields.stream().map(fieldMapper::toDto).collect(Collectors.toList());
         return new ResponseEntity<>(fieldDtoList, HttpStatus.OK);
     }
