@@ -14,6 +14,9 @@ public class Field extends BaseEntity {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Option> options = new ArrayList<>();
+
     @Column(nullable = false, unique = true)
     private String label;
 
@@ -51,6 +54,14 @@ public class Field extends BaseEntity {
 
     public void setResponseEntryList(List<ResponseEntry> responseEntryList) {
         this.responseEntryList = responseEntryList;
+    }
+
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Option> options) {
+        this.options = options;
     }
 
     public String getLabel() {

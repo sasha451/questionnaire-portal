@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +36,12 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public List<Field> getAllFields() {
         return fieldRepository.findAll();
+    }
+
+    @Override
+    public List<Field> getAllFieldsByCustomerId(long id) {
+        return getAllFields().stream().filter(field -> field.getCustomer().getId().equals(id))
+                .collect(Collectors.toList());
     }
 
     @Override

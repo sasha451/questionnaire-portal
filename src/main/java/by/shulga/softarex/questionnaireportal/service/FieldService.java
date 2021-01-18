@@ -12,6 +12,8 @@ public interface FieldService {
 
     List<Field> getAllFields();
 
+    List<Field> getAllFieldsByCustomerId(long id);
+
     Field saveField(Field field);
 
     Field updateField(long id, Field field);

@@ -128,3 +128,28 @@ databaseChangeLog:
                     foreignKey: true
                     foreignKeyName: fk_response_id
                     references: response(id)
+  - changeSet:
+      id: create_option_table
+      author: alex_shulga
+      changes:
+        - createTable:
+            tableName: option
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: option_value
+                  type: varchar(255)
+              - column:
+                  name: field_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_field_id
+                    references: field(id)

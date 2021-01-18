@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/customers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -33,9 +34,16 @@ public class CustomerController {
         return new ResponseEntity<>(customerMapper.toDto(savedCustomer), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> findCustomer(@PathVariable("id") long id) {
-        Customer customer = customerService.getCustomerById(id);
+    @GetMapping("/{email}")
+    public ResponseEntity<CustomerDto> findCustomerByEmail(@PathVariable("email") String email) {
+        Customer customer = customerService.getCustomerByEmail(email);
+        return new ResponseEntity<>(customerMapper.toDto(customer), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/login", params = {"email", "password"})
+    public ResponseEntity<CustomerDto> loginCustomer(@RequestParam("email") String email,
+                                                     @RequestParam("password") String password) {
+        Customer customer = customerService.getCustomerByEmailAndPassword(email, password);
         return new ResponseEntity<>(customerMapper.toDto(customer), HttpStatus.OK);
     }
 
