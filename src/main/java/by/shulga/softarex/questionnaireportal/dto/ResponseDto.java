@@ -9,7 +9,7 @@ public class ResponseDto {
 
     private long customerId;
 
-    private List<ResponseEntryDto> responseEntryDtoList = new ArrayList<>();
+    private List<ResponseEntryDto> responseEntries = new ArrayList<>();
 
     public ResponseDto() {
     }
@@ -30,11 +30,11 @@ public class ResponseDto {
         this.customerId = customerId;
     }
 
-    public List<ResponseEntryDto> getResponseEntryDtoList() {
-        return responseEntryDtoList;
+    public List<ResponseEntryDto> getResponseEntries() {
+        return responseEntries;
     }
 
-    public void setResponseEntryDtoList(List<ResponseEntryDto> responseEntryDtoList) {
-        this.responseEntryDtoList = responseEntryDtoList;
+    public void setResponseEntries(List<ResponseEntryDto> responseEntries) {
+        this.responseEntries = responseEntries;
     }
 }

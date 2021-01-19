@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/responses")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ResponseController {
 
     private final ResponseService responseService;
@@ -37,6 +38,14 @@ public class ResponseController {
     public ResponseEntity<ResponseDto> findResponse(@PathVariable("id") long id) {
         Response response = responseService.getResponseById(id);
         return new ResponseEntity<>(responseMapper.toDto(response), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/byCustomerId", params = "id")
+    public ResponseEntity<List<ResponseDto>> findAllResponsesByCustomerId(@RequestParam("id") long id) {
+        List<Response> responseList = responseService.getAllResponsesByCustomerId(id);
+        List<ResponseDto> responseDtoList = responseList.stream().map(responseMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
     @GetMapping

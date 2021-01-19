@@ -2,6 +2,8 @@ package by.shulga.softarex.questionnaireportal.dto;
 
 public class ResponseEntryDto {
 
+    private long id;
+
     private String responseEntryValue;
 
     private long fieldId;
@@ -23,5 +25,13 @@ public class ResponseEntryDto {
 
     public void setFieldId(long fieldId) {
         this.fieldId = fieldId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
