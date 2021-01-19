@@ -7,6 +7,7 @@ import by.shulga.softarex.questionnaireportal.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +22,23 @@ public class ResponseController {
 
     private final ResponseMapper responseMapper;
 
+    private SimpMessageSendingOperations messagingTemplate;
+
     @Autowired
-    public ResponseController(ResponseService responseService, ResponseMapper responseMapper) {
+    public ResponseController(ResponseService responseService, ResponseMapper responseMapper,
+                              SimpMessageSendingOperations messagingTemplate) {
         this.responseService = responseService;
         this.responseMapper = responseMapper;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) {
+    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) throws Exception {
         Response response = responseMapper.toEntity(responseDto);
         Response savedResponse = responseService.saveResponse(response);
-        return new ResponseEntity<>(responseMapper.toDto(savedResponse), HttpStatus.OK);
+        ResponseDto savedResponseDto = responseMapper.toDto(savedResponse);
+        messagingTemplate.convertAndSend("/topic/reply", responseDto);
+        return new ResponseEntity<>(savedResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
