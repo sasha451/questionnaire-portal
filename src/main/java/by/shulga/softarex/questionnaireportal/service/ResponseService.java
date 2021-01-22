@@ -12,6 +12,8 @@ public interface ResponseService {
 
     List<Response> getAllResponses();
 
+    List<Response> getAllResponsesByCustomerId(long id);
+
     Response saveResponse(Response response);
 
     Response updateResponse(long id, Response response);

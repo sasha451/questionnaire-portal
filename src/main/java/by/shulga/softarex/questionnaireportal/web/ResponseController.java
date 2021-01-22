@@ -7,6 +7,7 @@ import by.shulga.softarex.questionnaireportal.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,29 +15,44 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/responses")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ResponseController {
 
     private final ResponseService responseService;
 
     private final ResponseMapper responseMapper;
 
+    private SimpMessageSendingOperations messagingTemplate;
+
     @Autowired
-    public ResponseController(ResponseService responseService, ResponseMapper responseMapper) {
+    public ResponseController(ResponseService responseService, ResponseMapper responseMapper,
+                              SimpMessageSendingOperations messagingTemplate) {
         this.responseService = responseService;
         this.responseMapper = responseMapper;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) {
+    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) throws Exception {
         Response response = responseMapper.toEntity(responseDto);
         Response savedResponse = responseService.saveResponse(response);
-        return new ResponseEntity<>(responseMapper.toDto(savedResponse), HttpStatus.OK);
+        ResponseDto savedResponseDto = responseMapper.toDto(savedResponse);
+        messagingTemplate.convertAndSend("/topic/reply", responseDto);
+        return new ResponseEntity<>(savedResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> findResponse(@PathVariable("id") long id) {
         Response response = responseService.getResponseById(id);
         return new ResponseEntity<>(responseMapper.toDto(response), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/byCustomerId", params = "id")
+    public ResponseEntity<List<ResponseDto>> findAllResponsesByCustomerId(@RequestParam("id") long id) {
+        List<Response> responseList = responseService.getAllResponsesByCustomerId(id);
+        List<ResponseDto> responseDtoList = responseList.stream().map(responseMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
     @GetMapping

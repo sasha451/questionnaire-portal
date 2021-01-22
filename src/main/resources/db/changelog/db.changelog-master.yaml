@@ -153,3 +153,23 @@ databaseChangeLog:
                     foreignKey: true
                     foreignKeyName: fk_field_id
                     references: field(id)
+  - changeSet:
+      id: alter_response_entry_table_fk_
+      author: alex_shulga
+      changes:
+        dropForeignKeyConstraint:
+          baseTableName: response_entry
+          constraintName: fk_field_id
+  - changeSet:
+      id: add_response_entry_table_fk_
+      author: alex_shulga
+      changes:
+        addForeignKeyConstraint:
+          baseColumnNames: field_id
+          baseTableName: response_entry
+          constraintName: fk_field_id
+          referencedColumnNames: id
+          referencedTableName: field
+          onDelete: CASCADE
+
+

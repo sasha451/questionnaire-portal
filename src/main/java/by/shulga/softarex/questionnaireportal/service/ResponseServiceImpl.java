@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +35,12 @@ public class ResponseServiceImpl implements ResponseService {
     @Override
     public List<Response> getAllResponses() {
         return responseRepository.findAll();
+    }
+
+    @Override
+    public List<Response> getAllResponsesByCustomerId(long id) {
+        return getAllResponses().stream().filter(response -> response.getCustomer().getId().equals(id))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Response extends BaseEntity {
 
-    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ResponseEntry> responseEntryList = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE)

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class ResponseMapper {
@@ -34,7 +35,7 @@ public class ResponseMapper {
         Response response = Objects.isNull(responseDto) ? null : modelMapper.map(responseDto, Response.class);
         List<ResponseEntry> responseEntryList = new ArrayList<>();
         if (!Objects.isNull(response)) {
-            for(ResponseEntryDto responseEntryDto : responseDto.getResponseEntryDtoList()) {
+            for(ResponseEntryDto responseEntryDto : responseDto.getResponseEntries()) {
                 ResponseEntry responseEntry = modelMapper.map(responseEntryDto, ResponseEntry.class);
                 responseEntry.setField(fieldService.getFieldById(responseEntryDto.getFieldId()));
                 responseEntry.setResponse(response);
@@ -46,8 +47,12 @@ public class ResponseMapper {
         return response;
     }
 
-
     public ResponseDto toDto(Response response) {
-        return Objects.isNull(response) ? null : modelMapper.map(response, ResponseDto.class);
+        ResponseDto responseDto = Objects.isNull(response) ? null : modelMapper.map(response, ResponseDto.class);
+        if (!Objects.isNull(responseDto)) {
+            responseDto.setResponseEntries(response.getResponseEntryList().stream().map(responseEntry ->
+                    modelMapper.map(responseEntry, ResponseEntryDto.class)).collect(Collectors.toList()));
+        }
+        return responseDto;
     }
 }
