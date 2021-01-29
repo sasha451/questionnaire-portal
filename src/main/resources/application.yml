@@ -10,3 +10,12 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    username: myquestionnaireportal@gmail.com
+    password: mixngxwrtdiiqqyw
+    port: 587
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+

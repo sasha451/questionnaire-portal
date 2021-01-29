@@ -54,6 +54,12 @@ public class CustomerController {
         return new ResponseEntity<>(customerDtoList, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/changePassword")
+    public ResponseEntity<CustomerDto> updateCustomerPassword(@RequestBody CustomerDto customerDto) {
+        Customer updatedCustomer = customerService.updatePassword(customerDto.getId(), customerDto.getPassword());
+        return new ResponseEntity<>(customerMapper.toDto(updatedCustomer), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("id") long id,
                                                       @RequestBody CustomerDto customerDto) {

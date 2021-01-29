@@ -19,4 +19,6 @@ public interface CustomerService {
     Customer updateCustomer(long id, Customer customer);
 
     Customer getCustomerByEmailAndPassword(String email, String password);
+
+    Customer updatePassword(long id, String password);
 }

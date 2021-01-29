@@ -17,9 +17,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    private final SendEmailService sendEmailService;
+
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, SendEmailService sendEmailService) {
         this.customerRepository = customerRepository;
+        this.sendEmailService = sendEmailService;
     }
 
     @Override
@@ -59,10 +62,23 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer saveCustomer(Customer customer) {
         Optional<Customer> foundCustomerOptional = customerRepository.findByEmail(customer.getEmail());
         if (foundCustomerOptional.isEmpty()) {
+            String subject = "Questionnaire Portal Registration";
+            String text = "Your registration was successful. Welcome to Questionnaire Portal!";
+            sendEmailService.sendSimpleMessage(customer.getEmail(), subject, text);
             return customerRepository.save(customer);
         } else {
             throw new IllegalArgumentException("Customer with email " + customer.getEmail() + " already exists");
         }
+    }
+
+    @Override
+    public Customer updatePassword(long id, String password) {
+        Customer foundCustomer = getCustomerById(id);
+        foundCustomer.setPassword(password);
+        String subject = "Questionnaire Portal Password Change";
+        String text = "Your password was successfully changed!";
+        sendEmailService.sendSimpleMessage(foundCustomer.getEmail(), subject, text);
+        return customerRepository.save(foundCustomer);
     }
 
     @Override
@@ -71,7 +87,6 @@ public class CustomerServiceImpl implements CustomerService {
         foundCustomer.setFirstName(customer.getFirstName());
         foundCustomer.setLastName(customer.getLastName());
         foundCustomer.setEmail(customer.getEmail());
-        foundCustomer.setPassword(customer.getPassword());
         foundCustomer.setPhoneNumber(customer.getPhoneNumber());
         foundCustomer.setResponseList(customer.getResponseList());
         foundCustomer.setFieldList(customer.getFieldList());
