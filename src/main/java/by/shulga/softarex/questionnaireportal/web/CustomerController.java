@@ -27,19 +27,6 @@ public class CustomerController {
         this.customerMapper = customerMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<CustomerDto> saveCustomer(@RequestBody CustomerDto customerDto) {
-        Customer customer = customerMapper.toEntity(customerDto);
-        Customer savedCustomer = customerService.saveCustomer(customer);
-        return new ResponseEntity<>(customerMapper.toDto(savedCustomer), HttpStatus.OK);
-    }
-
-    @GetMapping("/{email}")
-    public ResponseEntity<CustomerDto> findCustomerByEmail(@PathVariable("email") String email) {
-        Customer customer = customerService.getCustomerByEmail(email);
-        return new ResponseEntity<>(customerMapper.toDto(customer), HttpStatus.OK);
-    }
-
     @GetMapping(value = "/login", params = {"email", "password"})
     public ResponseEntity<CustomerDto> loginCustomer(@RequestParam("email") String email,
                                                      @RequestParam("password") String password) {

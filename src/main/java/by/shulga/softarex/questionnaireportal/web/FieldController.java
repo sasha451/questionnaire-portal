@@ -47,13 +47,6 @@ public class FieldController {
         return new ResponseEntity<>(fieldDtoList, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/byCustomerId", params = "id")
-    public ResponseEntity<List<FieldDto>> findAllFieldsByCustomerId(@RequestParam("id") long id) {
-        List<Field> fields = fieldService.getAllFieldsByCustomerId(id);
-        List<FieldDto> fieldDtoList = fields.stream().map(fieldMapper::toDto).collect(Collectors.toList());
-        return new ResponseEntity<>(fieldDtoList, HttpStatus.OK);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<FieldDto> updateField(@PathVariable("id") long id, @RequestBody FieldDto fieldDto) {
         Field field = fieldMapper.toEntity(fieldDto);

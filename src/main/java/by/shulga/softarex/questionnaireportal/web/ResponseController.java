@@ -32,15 +32,6 @@ public class ResponseController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseDto> saveResponse(@RequestBody ResponseDto responseDto) throws Exception {
-        Response response = responseMapper.toEntity(responseDto);
-        Response savedResponse = responseService.saveResponse(response);
-        ResponseDto savedResponseDto = responseMapper.toDto(savedResponse);
-        messagingTemplate.convertAndSend("/topic/reply", responseDto);
-        return new ResponseEntity<>(savedResponseDto, HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> findResponse(@PathVariable("id") long id) {
         Response response = responseService.getResponseById(id);
