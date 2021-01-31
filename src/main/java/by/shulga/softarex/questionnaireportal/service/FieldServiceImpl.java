@@ -1,8 +1,10 @@
 package by.shulga.softarex.questionnaireportal.service;
 
 import by.shulga.softarex.questionnaireportal.entity.Field;
+import by.shulga.softarex.questionnaireportal.entity.Option;
 import by.shulga.softarex.questionnaireportal.exception.NotFoundException;
 import by.shulga.softarex.questionnaireportal.repository.FieldRepository;
+import by.shulga.softarex.questionnaireportal.repository.OptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +19,12 @@ public class FieldServiceImpl implements FieldService {
 
     private final FieldRepository fieldRepository;
 
+    private final OptionRepository optionRepository;
+
     @Autowired
-    public FieldServiceImpl(FieldRepository fieldRepository) {
+    public FieldServiceImpl(FieldRepository fieldRepository, OptionRepository optionRepository) {
         this.fieldRepository = fieldRepository;
+        this.optionRepository = optionRepository;
     }
 
     @Override
@@ -63,6 +68,10 @@ public class FieldServiceImpl implements FieldService {
         foundField.setFieldType(field.getFieldType());
         foundField.setCustomer(field.getCustomer());
         foundField.setResponseEntryList(field.getResponseEntryList());
+        field.getOptions().forEach(option -> {
+                option.setField(foundField);
+                optionRepository.save(option);
+        });
         return getFieldById(id);
     }
 }

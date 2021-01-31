@@ -27,19 +27,6 @@ public class CustomerController {
         this.customerMapper = customerMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<CustomerDto> saveCustomer(@RequestBody CustomerDto customerDto) {
-        Customer customer = customerMapper.toEntity(customerDto);
-        Customer savedCustomer = customerService.saveCustomer(customer);
-        return new ResponseEntity<>(customerMapper.toDto(savedCustomer), HttpStatus.OK);
-    }
-
-    @GetMapping("/{email}")
-    public ResponseEntity<CustomerDto> findCustomerByEmail(@PathVariable("email") String email) {
-        Customer customer = customerService.getCustomerByEmail(email);
-        return new ResponseEntity<>(customerMapper.toDto(customer), HttpStatus.OK);
-    }
-
     @GetMapping(value = "/login", params = {"email", "password"})
     public ResponseEntity<CustomerDto> loginCustomer(@RequestParam("email") String email,
                                                      @RequestParam("password") String password) {
@@ -52,6 +39,12 @@ public class CustomerController {
         List<Customer> customers = customerService.getAllCustomers();
         List<CustomerDto> customerDtoList = customers.stream().map(customerMapper::toDto).collect(Collectors.toList());
         return new ResponseEntity<>(customerDtoList, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/changePassword")
+    public ResponseEntity<CustomerDto> updateCustomerPassword(@RequestBody CustomerDto customerDto) {
+        Customer updatedCustomer = customerService.updatePassword(customerDto.getId(), customerDto.getPassword());
+        return new ResponseEntity<>(customerMapper.toDto(updatedCustomer), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

@@ -8,7 +8,7 @@ public class Option extends BaseEntity {
     @Column
     private String optionValue;
 
-    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "field_id")
     private Field field;
 
